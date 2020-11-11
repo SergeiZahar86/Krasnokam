@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Krasnokam
@@ -44,8 +35,15 @@ namespace Krasnokam
             elipsa.Width = 20;
             elipsa.Height = 20;
 
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = "1";
+            textBlock.Margin = new Thickness(x - 10, y - 10, 0, 0);
+            textBlock.Width = 15;
+            textBlock.Height = 15;
+
             //add (draw) ellipse to canvas  
             can.Children.Add(elipsa);
+            can.Children.Add(textBlock);
             arrr = can.Children;
         }
 
