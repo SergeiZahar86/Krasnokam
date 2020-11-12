@@ -8,13 +8,15 @@ namespace Krasnokam
 {
     public partial class MainWindow : Window
     {
-
+        /*
         private ScaleTransform st = new ScaleTransform();
         private bool canvas1_dragged = false;
         private Point PointMousePressed = new Point();
         private Thickness position;
-
-
+        */
+        Point? lastCenterPositionOnTarget;
+        Point? lastMousePositionOnTarget;
+        Point? lastDragPoint;
 
 
 
@@ -26,14 +28,137 @@ namespace Krasnokam
             
             InitializeComponent();
 
-            canvas1.LayoutTransform = st;
+            scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
+            scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
+            scrollViewer.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
+            scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
+
+            scrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
+            scrollViewer.MouseMove += OnMouseMove;
+
+            slider.ValueChanged += OnSliderValueChanged;
+
+            //slider.PreviewMouseRightButtonDown += ss2_PreviewMouseRightButtonDown;
+
+            //canvas1.LayoutTransform = st;
 
             //viewB.RenderTransform = st;
             //can.RenderTransform = cn;
         }
 
+        void OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (lastDragPoint.HasValue)
+            {
+                Point posNow = e.GetPosition(scrollViewer);
+
+                double dX = posNow.X - lastDragPoint.Value.X;
+                double dY = posNow.Y - lastDragPoint.Value.Y;
+
+                lastDragPoint = posNow;
+
+                scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - dX);
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - dY);
+            }
+        }
+
+        void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var mousePos = e.GetPosition(scrollViewer);
+            if (mousePos.X <= scrollViewer.ViewportWidth && mousePos.Y < scrollViewer.ViewportHeight) //make sure we still can use the scrollbars
+            {
+                scrollViewer.Cursor = Cursors.SizeAll;
+                lastDragPoint = mousePos;
+                Mouse.Capture(scrollViewer);
+            }
+        }
+
+        void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            lastMousePositionOnTarget = Mouse.GetPosition(grid);
+
+            if (e.Delta > 0)
+            {
+                slider.Value += 1;
+            }
+            if (e.Delta < 0)
+            {
+                slider.Value -= 1;
+            }
+
+            e.Handled = true;
+        }
+
+        void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            scrollViewer.Cursor = Cursors.Arrow;
+            scrollViewer.ReleaseMouseCapture();
+            lastDragPoint = null;
+        }
+
+        void OnSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            scaleTransform.ScaleX = e.NewValue;
+            scaleTransform.ScaleY = e.NewValue;
+
+            var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);
+            lastCenterPositionOnTarget = scrollViewer.TranslatePoint(centerOfViewport, grid);
+        }
+
+        void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)
+            {
+                Point? targetBefore = null;
+                Point? targetNow = null;
+
+                if (!lastMousePositionOnTarget.HasValue)
+                {
+                    if (lastCenterPositionOnTarget.HasValue)
+                    {
+                        var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);
+                        Point centerOfTargetNow = scrollViewer.TranslatePoint(centerOfViewport, grid);
+
+                        targetBefore = lastCenterPositionOnTarget;
+                        targetNow = centerOfTargetNow;
+                    }
+                }
+                else
+                {
+                    targetBefore = lastMousePositionOnTarget;
+                    targetNow = Mouse.GetPosition(grid);
+
+                    lastMousePositionOnTarget = null;
+                }
+
+                if (targetBefore.HasValue)
+                {
+                    double dXInTargetPixels = targetNow.Value.X - targetBefore.Value.X;
+                    double dYInTargetPixels = targetNow.Value.Y - targetBefore.Value.Y;
+
+                    double multiplicatorX = e.ExtentWidth / grid.Width;
+                    double multiplicatorY = e.ExtentHeight / grid.Height;
+
+                    double newOffsetX = scrollViewer.HorizontalOffset - dXInTargetPixels * multiplicatorX;
+                    double newOffsetY = scrollViewer.VerticalOffset - dYInTargetPixels * multiplicatorY;
+
+                    if (double.IsNaN(newOffsetX) || double.IsNaN(newOffsetY))
+                    {
+                        return;
+                    }
+
+                    scrollViewer.ScrollToHorizontalOffset(newOffsetX);
+                    scrollViewer.ScrollToVerticalOffset(newOffsetY);
+                }
+            }
+        }
 
 
+
+
+
+
+        /*
         private void canvas1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             canvas1_dragged = canvas1.CaptureMouse();
@@ -68,7 +193,7 @@ namespace Krasnokam
             st.ScaleY = st.ScaleX;
         }
 
-
+        */
 
 
 
@@ -91,8 +216,8 @@ namespace Krasnokam
 
         private void ss2_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            double x = e.GetPosition(canvas1).X; //get mouse coordinates over canvas
-            double y = e.GetPosition(canvas1).Y;
+            double x = e.GetPosition(grid).X; //get mouse coordinates over canvas
+            double y = e.GetPosition(grid).Y;
 
             Ellipse elipsa = new Ellipse(); //create ellipse
             elipsa.StrokeThickness = 3;
@@ -108,9 +233,33 @@ namespace Krasnokam
             textBlock.Height = 15;
 
             //add (draw) ellipse to canvas  
-            canvas1.Children.Add(elipsa);
-            canvas1.Children.Add(textBlock);
-            arrr = canvas1.Children;
+            grid.Children.Add(elipsa);
+            grid.Children.Add(textBlock);
+            arrr = grid.Children;
+        }
+
+        private void grid_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            double x = e.GetPosition(grid).X; //get mouse coordinates over canvas
+            double y = e.GetPosition(grid).Y;
+
+            Ellipse elipsa = new Ellipse(); //create ellipse
+            elipsa.StrokeThickness = 3;
+            elipsa.Stroke = Brushes.Red;
+            elipsa.Margin = new Thickness(x - 10, y - 10, 0, 0);
+            elipsa.Width = 20;
+            elipsa.Height = 20;
+
+            TextBlock textBlock = new TextBlock();
+            textBlock.Text = "1";
+            textBlock.Margin = new Thickness(x - 10, y - 10, 0, 0);
+            textBlock.Width = 15;
+            textBlock.Height = 15;
+
+            //add (draw) ellipse to canvas  
+            grid.Children.Add(elipsa);
+            grid.Children.Add(textBlock);
+            arrr = grid.Children;
         }
         /*
 private void MyCanvasComponent_MouseDown(object sender, MouseButtonEventArgs e)
