@@ -9,19 +9,30 @@
         Title="MainWindow" Height="450" Width="800">
     
         <Grid >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Viewbox x:Name="viewB" PreviewMouseDown="grid_PreviewMouseDown" Grid.Row="1" MouseWheel="viewB_MouseWheel">
-                <Canvas x:Name="can" PreviewMouseRightButtonDown="can_PreviewMouseRightButtonDown" Height="450" Width="800">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+        <ScrollViewer Name="ss2"  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Background="LightGray" PreviewMouseRightButtonDown="ss2_PreviewMouseRightButtonDown" >
+            
+            <Canvas Name="canvas1" Height="450" Width="800" MouseLeftButtonDown="canvas1_MouseLeftButtonDown" MouseLeftButtonUp="canvas1_MouseLeftButtonUp" MouseMove="canvas1_MouseMove"  Background="White" PreviewMouseWheel="canvas1_PreviewMouseWheel">
+                <Image Source="Image\low.jpg" Height="450" Width="800"/>
+            </Canvas>
+            
+        </ScrollViewer>
+        <!--
+            <Viewbox x:Name="viewB" PreviewMouseDown="grid_PreviewMouseDown" Grid.Row="1" >
+                <Canvas x:Name="can" PreviewMouseRightButtonDown="can_PreviewMouseRightButtonDown" Height="450" Width="800" MouseWheel="viewB_MouseWheel">
                     <Image Source="Image\low.jpg" Height="450" Width="800"/>
                 </Canvas>
             </Viewbox>
+            -->
+            <Label Grid.Column="1" Grid.Row="1" Background="Red" Content="dfsdffsdfsdd" FontSize="50"/>
+
         </Grid>
         <!--
         <InkCanvas x:Name="MyCanvasComponent" MouseDown="MyCanvasComponent_MouseDown" PreviewMouseDown="MyCanvasComponent_PreviewMouseDown">
