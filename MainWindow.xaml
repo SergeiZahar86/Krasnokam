@@ -7,14 +7,21 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     
-
-        <Viewbox x:Name="grid" PreviewMouseDown="grid_PreviewMouseDown" >
-        <Grid Height="450" Width="800">
-            <Canvas x:Name="can" PreviewMouseRightButtonDown="can_PreviewMouseRightButtonDown" Height="450" Width="800">
-                <Image Source="Image\low.jpg" Height="450" Width="800"/>
-            </Canvas>
-            </Grid>
-        </Viewbox>
+        <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+            <Viewbox x:Name="grid" PreviewMouseDown="grid_PreviewMouseDown" >
+                <Canvas x:Name="can" PreviewMouseRightButtonDown="can_PreviewMouseRightButtonDown" Height="450" Width="800">
+                    <Image Source="Image\low.jpg" Height="450" Width="800"/>
+                </Canvas>
+            </Viewbox>
+        </Grid>
         <!--
         <InkCanvas x:Name="MyCanvasComponent" MouseDown="MyCanvasComponent_MouseDown" PreviewMouseDown="MyCanvasComponent_PreviewMouseDown">
             <Image Source="Image\low.jpg"/>
