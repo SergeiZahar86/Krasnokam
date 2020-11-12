@@ -8,18 +8,19 @@ namespace Krasnokam
 {
     public partial class MainWindow : Window
     {
+        private ScaleTransform st = new ScaleTransform();
         UIElementCollection arrr;
         public MainWindow()
         {
             
             InitializeComponent();
+            viewB.RenderTransform = st;
         }
 
         private void InkCanvas_ActiveEditingModeChanged(object sender, RoutedEventArgs e)
         {
 
         }
-
         private void grid_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             //MyCanvasComponent.Children.Clear(); //removes previously drawed objects
@@ -50,6 +51,13 @@ namespace Krasnokam
         private void can_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             var vvvv = arrr;
+        }
+
+        private void viewB_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0) st.ScaleX = st.ScaleX *= 1.1;
+            if (e.Delta < 0) st.ScaleX = st.ScaleX /= 1.1;
+            st.ScaleY = st.ScaleX;
         }
         /*
 private void MyCanvasComponent_MouseDown(object sender, MouseButtonEventArgs e)

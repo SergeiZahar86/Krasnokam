@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Krasnokam"
+        xmlns:gmaps="clr-namespace:GMap.NET.WindowsPresentation;assembly=GMap.NET.WindowsPresentation"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     
@@ -16,7 +17,7 @@
             <RowDefinition/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-            <Viewbox x:Name="grid" PreviewMouseDown="grid_PreviewMouseDown" >
+        <Viewbox x:Name="viewB" PreviewMouseDown="grid_PreviewMouseDown" Grid.Row="1" MouseWheel="viewB_MouseWheel">
                 <Canvas x:Name="can" PreviewMouseRightButtonDown="can_PreviewMouseRightButtonDown" Height="450" Width="800">
                     <Image Source="Image\low.jpg" Height="450" Width="800"/>
                 </Canvas>
