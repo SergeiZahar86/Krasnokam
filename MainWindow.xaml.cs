@@ -79,11 +79,11 @@ namespace Krasnokam
 
             if (e.Delta > 0)
             {
-                slider.Value += 1;
+                slider.Value += 0.2;
             }
             if (e.Delta < 0)
             {
-                slider.Value -= 1;
+                slider.Value -= 0.2;
             }
 
             e.Handled = true;
