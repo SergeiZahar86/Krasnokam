@@ -8,297 +8,91 @@ namespace Krasnokam
 {
     public partial class MainWindow : Window
     {
-        /*
-        private ScaleTransform st = new ScaleTransform();
-        private bool canvas1_dragged = false;
-        private Point PointMousePressed = new Point();
-        private Thickness position;
-        */
-        Point? lastCenterPositionOnTarget;
-        Point? lastMousePositionOnTarget;
-        Point? lastDragPoint;
-
-
-
-        //private ScaleTransform st = new ScaleTransform();
-        //private ScaleTransform cn = new ScaleTransform();
-        UIElementCollection arrr;
         public MainWindow()
         {
             
             InitializeComponent();
 
-            scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
-            scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
-            scrollViewer.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
-            scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
-
-            scrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
-            scrollViewer.MouseMove += OnMouseMove;
-
-            slider.ValueChanged += OnSliderValueChanged;
-
-            //slider.PreviewMouseRightButtonDown += ss2_PreviewMouseRightButtonDown;
-
-            //canvas1.LayoutTransform = st;
-
-            //viewB.RenderTransform = st;
-            //can.RenderTransform = cn;
+        }
+        private void GlobalWindow_Loaded(object sender, RoutedEventArgs e) // начальная загрузка
+        {
+                MainPage p = new MainPage();
+                MainFrame.Navigate(p);
         }
 
-        void OnMouseMove(object sender, MouseEventArgs e)
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+            => Application.Current.Shutdown(); // выход из программы
+        private void changePassword_Click(object sender, RoutedEventArgs e) // изменение пароля
         {
-            if (lastDragPoint.HasValue)
+            changePassword dialog = new changePassword();
+            dialog.ShowDialog();
+            bool? ret = dialog.DialogResult;
+            if (ret == true)
             {
-                Point posNow = e.GetPosition(scrollViewer);
+                //string login = dialog.Login;
 
-                double dX = posNow.X - lastDragPoint.Value.X;
-                double dY = posNow.Y - lastDragPoint.Value.Y;
-
-                lastDragPoint = posNow;
-
-                scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - dX);
-                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - dY);
             }
         }
-
-        void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void MinButton_Click(object sender, RoutedEventArgs e) // сворачивание окна
         {
-            var mousePos = e.GetPosition(scrollViewer);
-            if (mousePos.X <= scrollViewer.ViewportWidth && mousePos.Y < scrollViewer.ViewportHeight) //make sure we still can use the scrollbars
-            {
-                scrollViewer.Cursor = Cursors.SizeAll;
-                lastDragPoint = mousePos;
-                Mouse.Capture(scrollViewer);
-            }
+            this.WindowState = WindowState.Minimized;
         }
-
-        void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void Attestation_Click(object sender, MouseButtonEventArgs e) // страница аттестации
         {
-            lastMousePositionOnTarget = Mouse.GetPosition(grid);
+            var converter = new System.Windows.Media.BrushConverter();
+            //BorderReport.BorderBrush= (Brush)converter.ConvertFromString("#37474F");
+            BorderAttestation.BorderBrush = (Brush)converter.ConvertFromString("#CC0000");
+            //BorderArchive.BorderBrush = (Brush)converter.ConvertFromString("#37474F");
+            //BorderAttestation.BorderBrush = (Brush)converter.ConvertFromString("#00CC00");
+            MainPage p = new MainPage();
+            MainFrame.Navigate(p);
 
-            if (e.Delta > 0)
-            {
-                slider.Value += 0.2;
-            }
-            if (e.Delta < 0)
-            {
-                slider.Value -= 0.2;
-            }
 
-            e.Handled = true;
         }
-
-        void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            scrollViewer.Cursor = Cursors.Arrow;
-            scrollViewer.ReleaseMouseCapture();
-            lastDragPoint = null;
-        }
-
-        void OnSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            scaleTransform.ScaleX = e.NewValue;
-            scaleTransform.ScaleY = e.NewValue;
-
-            var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);
-            lastCenterPositionOnTarget = scrollViewer.TranslatePoint(centerOfViewport, grid);
-        }
-
-        void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)
-            {
-                Point? targetBefore = null;
-                Point? targetNow = null;
-
-                if (!lastMousePositionOnTarget.HasValue)
-                {
-                    if (lastCenterPositionOnTarget.HasValue)
-                    {
-                        var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);
-                        Point centerOfTargetNow = scrollViewer.TranslatePoint(centerOfViewport, grid);
-
-                        targetBefore = lastCenterPositionOnTarget;
-                        targetNow = centerOfTargetNow;
-                    }
-                }
-                else
-                {
-                    targetBefore = lastMousePositionOnTarget;
-                    targetNow = Mouse.GetPosition(grid);
-
-                    lastMousePositionOnTarget = null;
-                }
-
-                if (targetBefore.HasValue)
-                {
-                    double dXInTargetPixels = targetNow.Value.X - targetBefore.Value.X;
-                    double dYInTargetPixels = targetNow.Value.Y - targetBefore.Value.Y;
-
-                    double multiplicatorX = e.ExtentWidth / grid.Width;
-                    double multiplicatorY = e.ExtentHeight / grid.Height;
-
-                    double newOffsetX = scrollViewer.HorizontalOffset - dXInTargetPixels * multiplicatorX;
-                    double newOffsetY = scrollViewer.VerticalOffset - dYInTargetPixels * multiplicatorY;
-
-                    if (double.IsNaN(newOffsetX) || double.IsNaN(newOffsetY))
-                    {
-                        return;
-                    }
-
-                    scrollViewer.ScrollToHorizontalOffset(newOffsetX);
-                    scrollViewer.ScrollToVerticalOffset(newOffsetY);
-                }
-            }
-        }
-
-
-
-
-
-
-        /*
-        private void canvas1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            canvas1_dragged = canvas1.CaptureMouse();
-            PointMousePressed = e.GetPosition(canvas1);
-        }
-
-        private void canvas1_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            canvas1_dragged = false;
-            canvas1.ReleaseMouseCapture();
-        }
-
-        private void canvas1_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (!canvas1_dragged) return;
-            Point PointMouseMoved = e.GetPosition(canvas1);
-            position = canvas1.Margin;
-            position.Left += PointMouseMoved.X - PointMousePressed.X;
-            position.Top += PointMouseMoved.Y - PointMousePressed.Y;
-            canvas1.Margin = position;
-        }
-
-        private void canvas1_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            e.Handled = true;
-            Point PointMouseWheel = e.GetPosition(canvas1);
-            position = canvas1.Margin;
-            //формулу точную не выводил, но центр массштабирования теперь находится приблизительно там, где указатель мыши
-            if (e.Delta > 0) { st.ScaleX *= 1.1; position.Left -= PointMouseWheel.X * 0.1 * st.ScaleX; position.Top -= PointMouseWheel.Y * 0.1 * st.ScaleY; }
-            if (e.Delta < 0) { st.ScaleX /= 1.1; position.Left += PointMouseWheel.X * 0.1 * st.ScaleX; position.Top += PointMouseWheel.Y * 0.1 * st.ScaleY; }
-            canvas1.Margin = position;
-            st.ScaleY = st.ScaleX;
-        }
-
-        */
-
-
-
-
-
-
-        private void can_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            var vvvv = arrr;
-        }
-
-        private void viewB_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void Report_Click(object sender, MouseButtonEventArgs e) // страница отчетов
         {
             /*
-            if (e.Delta > 0) cn.ScaleX = cn.ScaleX *= 1.1;
-            if (e.Delta < 0) cn.ScaleX = cn.ScaleX /= 1.1;
-            cn.ScaleY = cn.ScaleX;
+            var converter = new System.Windows.Media.BrushConverter();
+            //BorderReport.BorderBrush = (Brush)converter.ConvertFromString("#CC0000");
+            BorderAttestation.BorderBrush = (Brush)converter.ConvertFromString("#37474F");
+            //BorderArchive.BorderBrush = (Brush)converter.ConvertFromString("#37474F");
+
+            ReportPage p = new ReportPage();
+            MainFrame.Navigate(p);
+            user.Text = "Ok";
             */
         }
-
-        private void ss2_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void Archive_Click(object sender, MouseButtonEventArgs e) // страница архивов
         {
-            double x = e.GetPosition(grid).X; //get mouse coordinates over canvas
-            double y = e.GetPosition(grid).Y;
+            /*
+            var converter = new System.Windows.Media.BrushConverter();
+            //BorderReport.BorderBrush = (Brush)converter.ConvertFromString("#37474F");
+            BorderAttestation.BorderBrush = (Brush)converter.ConvertFromString("#37474F");
+            //BorderArchive.BorderBrush = (Brush)converter.ConvertFromString("#CC0000");
 
-            Ellipse elipsa = new Ellipse(); //create ellipse
-            elipsa.StrokeThickness = 3;
-            elipsa.Stroke = Brushes.Red;
-            elipsa.Margin = new Thickness(x - 10, y - 10, 0, 0);
-            elipsa.Width = 20;
-            elipsa.Height = 20;
-
-            TextBlock textBlock = new TextBlock();
-            textBlock.Text = "1";
-            textBlock.Margin = new Thickness(x - 10, y - 10, 0, 0);
-            textBlock.Width = 15;
-            textBlock.Height = 15;
-
-            //add (draw) ellipse to canvas  
-            grid.Children.Add(elipsa);
-            grid.Children.Add(textBlock);
-            arrr = grid.Children;
+            Archive p = new Archive();
+            MainFrame.Navigate(p);
+            */
+        }
+        private void signIn_Click(object sender, RoutedEventArgs e) // кнопка авторизации
+        {
+            GetSignIn();
+        }
+        private void GetSignIn() // Авторизация
+        {
+            SignIn signIn = new SignIn();
+            signIn.ShowDialog();
+            try
+            {
+                //label_fio.Content = Global.ShortName(global.user);
+            }
+            catch
+            {
+            }
         }
 
-        private void grid_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            double x = e.GetPosition(grid).X; //get mouse coordinates over canvas
-            double y = e.GetPosition(grid).Y;
-
-            Ellipse elipsa = new Ellipse(); //create ellipse
-            elipsa.StrokeThickness = 3;
-            elipsa.Stroke = Brushes.Red;
-            elipsa.Margin = new Thickness(x - 10, y - 10, 0, 0);
-            elipsa.Width = 20;
-            elipsa.Height = 20;
-
-            TextBlock textBlock = new TextBlock();
-            textBlock.Text = "1";
-            textBlock.Margin = new Thickness(x - 10, y - 10, 0, 0);
-            textBlock.Width = 15;
-            textBlock.Height = 15;
-
-            //add (draw) ellipse to canvas  
-            grid.Children.Add(elipsa);
-            grid.Children.Add(textBlock);
-            arrr = grid.Children;
-        }
-        /*
-private void MyCanvasComponent_MouseDown(object sender, MouseButtonEventArgs e)
-{
-MyCanvasComponent.Children.Clear(); //removes previously drawed objects
 
 
-double x = e.GetPosition(MyCanvasComponent).X; //get mouse coordinates over canvas
-double y = e.GetPosition(MyCanvasComponent).Y;
 
-Ellipse elipsa = new Ellipse(); //create ellipse
-elipsa.StrokeThickness = 3;
-elipsa.Stroke = Brushes.Red;
-elipsa.Margin = new Thickness(x, y, 0, 0);
-elipsa.Width = 20;
-elipsa.Height = 20;
-
-//add (draw) ellipse to canvas  
-MyCanvasComponent.Children.Add(elipsa);
-}
-
-private void MyCanvasComponent_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-{
-//MyCanvasComponent.Children.Clear(); //removes previously drawed objects
-
-
-double x = e.GetPosition(MyCanvasComponent).X; //get mouse coordinates over canvas
-double y = e.GetPosition(MyCanvasComponent).Y;
-
-Ellipse elipsa = new Ellipse(); //create ellipse
-elipsa.StrokeThickness = 3;
-elipsa.Stroke = Brushes.Red;
-elipsa.Margin = new Thickness(x, y, 0, 0);
-elipsa.Width = 20;
-elipsa.Height = 20;
-
-//add (draw) ellipse to canvas  
-MyCanvasComponent.Children.Add(elipsa);
-}
-*/
     }
 }
