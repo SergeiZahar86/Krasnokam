@@ -8,9 +8,11 @@
       mc:Ignorable="d" d:DesignHeight="1050" d:DesignWidth="1920"
       Title="MainPage">
 
+  
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="35"/>
             <ColumnDefinition Width="70"/>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -47,7 +49,8 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Slider x:Name="slider" Grid.Column="0" Grid.Row="0" Grid.RowSpan="20" Orientation="Vertical" HorizontalAlignment="Left" Minimum="1" />
+        <Slider x:Name="slider" Grid.Column="0" Grid.Row="0" Grid.RowSpan="20" Orientation="Vertical" HorizontalAlignment="Left" Minimum="1"
+                />
         <ScrollViewer Name="scrollViewer" Grid.Column="1" Grid.ColumnSpan="10" Grid.Row="0" Grid.RowSpan="15" VerticalScrollBarVisibility="Visible"
                           HorizontalScrollBarVisibility="Visible">
 

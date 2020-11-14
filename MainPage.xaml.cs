@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -132,16 +133,18 @@ namespace Krasnokam
             double y = e.GetPosition(grid).Y;
 
             Ellipse elipsa = new Ellipse(); //create ellipse
-            elipsa.StrokeThickness = 3;
+            elipsa.StrokeThickness = 2;
             elipsa.Stroke = Brushes.Red;
             elipsa.Margin = new Thickness(x - 10, y - 10, 0, 0);
             elipsa.Width = 20;
             elipsa.Height = 20;
 
             TextBlock textBlock = new TextBlock();
-            textBlock.Text = "1";
-            textBlock.Margin = new Thickness(x - 10, y - 10, 0, 0);
-            textBlock.Width = 15;
+            textBlock.FontSize = 7;
+            textBlock.Inlines.Add(new Bold(new Run("245")));
+            textBlock.TextAlignment = TextAlignment.Center;
+            textBlock.Margin = new Thickness(x - 15, y - 6, 0, 0);
+            textBlock.Width = 30;
             textBlock.Height = 15;
 
             //add (draw) ellipse to canvas  
