@@ -49,8 +49,7 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Slider x:Name="slider" Grid.Column="0" Grid.Row="0" Grid.RowSpan="20" Orientation="Vertical" HorizontalAlignment="Left" Minimum="1"
-                />
+        <Slider x:Name="slider" Grid.Column="0" Grid.Row="0" Grid.RowSpan="20" Orientation="Vertical" HorizontalAlignment="Left" Minimum="1"/>
         <ScrollViewer Name="scrollViewer" Grid.Column="1" Grid.ColumnSpan="10" Grid.Row="0" Grid.RowSpan="15" VerticalScrollBarVisibility="Visible"
                           HorizontalScrollBarVisibility="Visible">
 
@@ -66,5 +65,205 @@
             </Canvas>
 
         </ScrollViewer>
+
+        <DataGrid x:Name="DataGridMain" Grid.Row="0" Grid.RowSpan="20" Grid.Column="11" Grid.ColumnSpan="8" Padding="2" ColumnWidth="*" 
+                  AutoGenerateColumns="False" ItemsSource="{Binding}"
+                  VerticalAlignment="Top" HorizontalAlignment="Stretch" FontSize="16" 
+                  FontFamily="Calibri" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                  Loaded="DataGridMain_Loaded" BorderThickness="0"
+                  SelectionMode="Single" CanUserAddRows="False" AlternatingRowBackground="#FFD0DEE4"
+                  BorderBrush="White" Background="White" 
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#FFB0B0B0" Margin="0,0,10,0"
+                  MouseDoubleClick="DataGridMain_MouseDoubleClick"   >
+
+
+            <DataGrid.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
+                   Color="#AAFF0000"/>
+            </DataGrid.Resources>
+            <!-- ========================== Стиль строки ======================= -->
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="White" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="Red"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.Columns>
+                
+                <DataGridTemplateColumn x:Name="id" Header="№ штабеля" Width="50"
+                                        HeaderStyle="{StaticResource CenterGridHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Car_id}"  HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" ToolTipService.ShowDuration="15000" 
+                                       >
+                                <TextBlock.ToolTip >
+                                    <ToolTip>
+                                        <TextBlock Text="{Binding Car_id}" FontSize="22" Foreground="Black" 
+                                                    Background="White" />
+                                    </ToolTip>
+                                </TextBlock.ToolTip>
+                                </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="raw" Header="Сырьё" 
+                                        HeaderStyle="{StaticResource CenterGridHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <Button x:Name="matButton" Height="30" BorderThickness="0"
+                                    Style="{StaticResource SomeButton}"
+                                    Background="Transparent" Click="matButton_Click"
+                                    BorderBrush="White"  >
+                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
+                                    <TextBlock.ToolTip >
+                                        <ToolTip>
+                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                                        Background="White" />
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="ashContent" Header="Зольность, A" 
+                                        HeaderStyle="{StaticResource CenterGridHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <Button x:Name="matButton" Height="30" BorderThickness="0"
+                                    Style="{StaticResource SomeButton}"
+                                    Background="Transparent" Click="matButton_Click"
+                                    BorderBrush="White"  >
+                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
+                                    <TextBlock.ToolTip >
+                                        <ToolTip>
+                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                                        Background="White" />
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="humidity" Header="Влажность, W" 
+                                        HeaderStyle="{StaticResource CenterGridHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <Button x:Name="matButton" Height="30" BorderThickness="0"
+                                    Style="{StaticResource SomeButton}"
+                                    Background="Transparent" Click="matButton_Click"
+                                    BorderBrush="White"  >
+                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
+                                    <TextBlock.ToolTip >
+                                        <ToolTip>
+                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                                        Background="White" />
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="task" Header="Задание на смену, т." 
+                                        HeaderStyle="{StaticResource CenterGridHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <Button x:Name="matButton" Height="30" BorderThickness="0"
+                                    Style="{StaticResource SomeButton}"
+                                    Background="Transparent" Click="matButton_Click"
+                                    BorderBrush="White"  >
+                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
+                                    <TextBlock.ToolTip >
+                                        <ToolTip>
+                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                                        Background="White" />
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="currentWeight" Header="Текущий вес, т." 
+                                        HeaderStyle="{StaticResource CenterGridHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <Button x:Name="matButton" Height="30" BorderThickness="0"
+                                    Style="{StaticResource SomeButton}"
+                                    Background="Transparent" Click="matButton_Click"
+                                    BorderBrush="White"  >
+                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
+                                    <TextBlock.ToolTip >
+                                        <ToolTip>
+                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                                        Background="White" />
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="factPerShift" Header="Факт за смену, т." 
+                                        HeaderStyle="{StaticResource CenterGridHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <Button x:Name="matButton" Height="30" BorderThickness="0"
+                                    Style="{StaticResource SomeButton}"
+                                    Background="Transparent" Click="matButton_Click"
+                                    BorderBrush="White"  >
+                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
+                                    <TextBlock.ToolTip >
+                                        <ToolTip>
+                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                                        Background="White" />
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="status" Header="Статус" 
+                                        HeaderStyle="{StaticResource CenterGridHeaderStyle}">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <Button x:Name="matButton" Height="30" BorderThickness="0"
+                                    Style="{StaticResource SomeButton}"
+                                    Background="Transparent" Click="matButton_Click"
+                                    BorderBrush="White"  >
+                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
+                                    <TextBlock.ToolTip >
+                                        <ToolTip>
+                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                                        Background="White" />
+                                        </ToolTip>
+                                    </TextBlock.ToolTip>
+                                </TextBlock>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Page>
