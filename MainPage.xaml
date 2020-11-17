@@ -8,7 +8,9 @@
       mc:Ignorable="d" d:DesignHeight="1050" d:DesignWidth="1920"
       Title="MainPage">
 
-  
+    <Page.Resources>
+        
+    </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -49,19 +51,20 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Slider x:Name="slider" Grid.Column="0" Grid.Row="0" Grid.RowSpan="20" Orientation="Vertical" HorizontalAlignment="Left" Minimum="1"/>
-        <ScrollViewer Name="scrollViewer" Grid.Column="1" Grid.ColumnSpan="10" Grid.Row="0" Grid.RowSpan="15" VerticalScrollBarVisibility="Visible"
-                          HorizontalScrollBarVisibility="Visible">
-
-            <Canvas Name="grid" Width="1020" Height="1010" RenderTransformOrigin="0.5,0.5" PreviewMouseRightButtonDown="grid_PreviewMouseRightButtonDown">
+        <Ellipse/>
+        <Slider x:Name="slider" Grid.Column="0" Grid.Row="0" Grid.RowSpan="20" Orientation="Vertical"
+                HorizontalAlignment="Left" Minimum="1"/>
+        <ScrollViewer Name="scrollViewer" Grid.Column="1" Grid.ColumnSpan="10" Grid.Row="0" Grid.RowSpan="15"
+                      VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+            
+            <Canvas Name="cnv" Width="1020" Height="1010" RenderTransformOrigin="0.5,0.5" Focusable="True" 
+                    MouseRightButtonUp="UIElement_OnMouseRightButtonUp">
                 <Canvas.LayoutTransform>
                     <TransformGroup>
                         <ScaleTransform x:Name="scaleTransform"/>
                     </TransformGroup>
                 </Canvas.LayoutTransform>
-                <Viewbox >
                     <Image Source="Resources\Map.png" Width="1020" Height="1010"/>
-                </Viewbox>
             </Canvas>
 
         </ScrollViewer>

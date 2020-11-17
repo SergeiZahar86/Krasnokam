@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -12,49 +13,58 @@ namespace Krasnokam
     /// </summary>
     public partial class MainPage : Page
     {
-       
+
+        Ellipse elipsa;
+        TextBlock textBlock;
+
         Point? lastCenterPositionOnTarget;
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
         UIElementCollection arrr;
+        List<Ellipse> www;
         public MainPage()
         {
 
             InitializeComponent();
+            elipsa = new Ellipse();
+            textBlock = new TextBlock();
 
-            scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;
+            scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;  // Происходит при обнаружении изменений в положении прокрутки, экстенте или размере окна просмотра.
             scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
             scrollViewer.PreviewMouseLeftButtonUp += OnMouseLeftButtonUp;
             scrollViewer.PreviewMouseWheel += OnPreviewMouseWheel;
             scrollViewer.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
             scrollViewer.MouseMove += OnMouseMove;
             slider.ValueChanged += OnSliderValueChanged;
+            cnv.PreviewMouseRightButtonDown += OnCanvasPreviewMouseRightButtonDown;
+            elipsa.PreviewMouseRightButtonDown += OnElipseMouseRightButtonDown;
+
         }
-        void OnMouseMove(object sender, MouseEventArgs e)
+        void OnMouseMove(object sender, MouseEventArgs e) // перемещение курсора над картой. Сдвиг картинки.
         {
-            if (lastDragPoint.HasValue)
+            if (lastDragPoint.HasValue)                        // проверяем наличие значения 
             {
-                Point posNow = e.GetPosition(scrollViewer);
+                Point posNow = e.GetPosition(scrollViewer);    // заносим координаты курсора в объект Point
                 double dX = posNow.X - lastDragPoint.Value.X;
                 double dY = posNow.Y - lastDragPoint.Value.Y;
                 lastDragPoint = posNow;
-                scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - dX);
-                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - dY);
+                scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - dX);  // Прокручивает содержимое в ScrollViewer до указанной позиции горизонтального смещения.
+                scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - dY);      // Прокручивает содержимое в ScrollViewer до указанной позиции вертикального смещения.
             }
         }
-        void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)  // ЛКМ по карте для записи координат клика и изменения вида курсора
         {
             var mousePos = e.GetPosition(scrollViewer);
-            if (mousePos.X <= scrollViewer.ViewportWidth && mousePos.Y < scrollViewer.ViewportHeight) //make sure we still can use the scrollbars
+            if (mousePos.X <= scrollViewer.ViewportWidth && mousePos.Y < scrollViewer.ViewportHeight) // проверка того что клик был в границах объекта
             {
-                scrollViewer.Cursor = Cursors.SizeAll;
-                lastDragPoint = mousePos;
-                Mouse.Capture(scrollViewer);
+                scrollViewer.Cursor = Cursors.SizeAll;    // меняем курсор
+                lastDragPoint = mousePos;                 // записать координаты клика
+                Mouse.Capture(scrollViewer);              // метод Capture привязывает мышь к объекту
             }
         }
-        void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        void OnPreviewMouseWheel(object sender, MouseWheelEventArgs e) // перемещение ползунка зума
         {
-            lastMousePositionOnTarget = Mouse.GetPosition(grid);
+            lastMousePositionOnTarget = Mouse.GetPosition(cnv); // позиция мыши во время зума
             if (e.Delta > 0)
             {
                 slider.Value += 0.2;
@@ -65,32 +75,32 @@ namespace Krasnokam
             }
             e.Handled = true;
         }
-        void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e) // отжатие ЛКМ
         {
-            scrollViewer.Cursor = Cursors.Arrow;
-            scrollViewer.ReleaseMouseCapture();
+            scrollViewer.Cursor = Cursors.Arrow;   // меняем вид курсора
+            scrollViewer.ReleaseMouseCapture();    // Освобождает мышь, если элемент произвел ее захват.
             lastDragPoint = null;
         }
-        void OnSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        void OnSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) // событие слайдера. 
         {
-            scaleTransform.ScaleX = e.NewValue;
-            scaleTransform.ScaleY = e.NewValue;
-            var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);
-            lastCenterPositionOnTarget = scrollViewer.TranslatePoint(centerOfViewport, grid);
+            scaleTransform.ScaleX = e.NewValue;  // Возвращает новое значение свойства, указанное событием
+            scaleTransform.ScaleY = e.NewValue;  // Возвращает новое значение свойства, указанное событием
+            var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);  // получаем середину
+            lastCenterPositionOnTarget = scrollViewer.TranslatePoint(centerOfViewport, cnv); // сохраняем значение координат середины
         }
-        void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)
+        void OnScrollViewerScrollChanged(object sender, ScrollChangedEventArgs e)  // Происходит при обнаружении изменений в положении прокрутки, экстенте или размере окна просмотра.
         {
-            if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)
+            if (e.ExtentHeightChange != 0 || e.ExtentWidthChange != 0)  // Возвращает значение, которое задает изменение ширины и высоты экстента ScrollViewer.
             {
                 Point? targetBefore = null;
                 Point? targetNow = null;
 
-                if (!lastMousePositionOnTarget.HasValue)
+                if (!lastMousePositionOnTarget.HasValue) // если приближение производится ползунком
                 {
                     if (lastCenterPositionOnTarget.HasValue)
                     {
-                        var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);
-                        Point centerOfTargetNow = scrollViewer.TranslatePoint(centerOfViewport, grid);
+                        var centerOfViewport = new Point(scrollViewer.ViewportWidth / 2, scrollViewer.ViewportHeight / 2);  // центр объекта
+                        Point centerOfTargetNow = scrollViewer.TranslatePoint(centerOfViewport, cnv); // Преобразует точку относительно данного элемента в координаты относительно указанного элемента.
                         targetBefore = lastCenterPositionOnTarget;
                         targetNow = centerOfTargetNow;
                     }
@@ -98,7 +108,7 @@ namespace Krasnokam
                 else
                 {
                     targetBefore = lastMousePositionOnTarget;
-                    targetNow = Mouse.GetPosition(grid);
+                    targetNow = Mouse.GetPosition(cnv);
                     lastMousePositionOnTarget = null;
                 }
 
@@ -106,40 +116,46 @@ namespace Krasnokam
                 {
                     double dXInTargetPixels = targetNow.Value.X - targetBefore.Value.X;
                     double dYInTargetPixels = targetNow.Value.Y - targetBefore.Value.Y;
-                    double multiplicatorX = e.ExtentWidth / grid.Width;
-                    double multiplicatorY = e.ExtentHeight / grid.Height;
-                    double newOffsetX = scrollViewer.HorizontalOffset - dXInTargetPixels * multiplicatorX;
-                    double newOffsetY = scrollViewer.VerticalOffset - dYInTargetPixels * multiplicatorY;
+                    double multiplicatorX = e.ExtentWidth / cnv.Width;                        // ExtentWidth Получает обновленную ширину экстента ScrollViewer.
+                    double multiplicatorY = e.ExtentHeight / cnv.Height;                      // ExtentHeight Получает обновленную высоту экстента ScrollViewer.
+                    double newOffsetX = scrollViewer.HorizontalOffset - dXInTargetPixels * multiplicatorX; // HorizontalOffset Получает значение, содержащее горизонтальное смещение прокручиваемого содержимого.
+                    double newOffsetY = scrollViewer.VerticalOffset - dYInTargetPixels * multiplicatorY;   // VerticalOffset Получает значение, которое содержит вертикальное смещение прокручиваемого содержимого.
                     if (double.IsNaN(newOffsetX) || double.IsNaN(newOffsetY))
                     {
                         return;
                     }
-                    scrollViewer.ScrollToHorizontalOffset(newOffsetX);
-                    scrollViewer.ScrollToVerticalOffset(newOffsetY);
+                    scrollViewer.ScrollToHorizontalOffset(newOffsetX); // Выполняет прокрутку содержимого в ScrollViewer до указанной позиции горизонтального смещения.
+                    scrollViewer.ScrollToVerticalOffset(newOffsetY);   // Выполняет прокрутку содержимого в ScrollViewer до указанной позиции вертикального смещения.
                 }
             }
         }
+        /*
         private void can_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             var vvvv = arrr;
         }
-        private void viewB_MouseWheel(object sender, MouseWheelEventArgs e)
+        */
+        private void OnCanvasPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)                  // ПКМ по эллипсу
         {
+            double x = e.GetPosition(cnv).X; //get mouse coordinates over canvas
+            double y = e.GetPosition(cnv).Y;
 
-        }
-        private void grid_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            double x = e.GetPosition(grid).X; //get mouse coordinates over canvas
-            double y = e.GetPosition(grid).Y;
-
-            Ellipse elipsa = new Ellipse(); //create ellipse
+            elipsa = new Ellipse(); //create ellipse
             elipsa.StrokeThickness = 2;
             elipsa.Stroke = Brushes.Red;
             elipsa.Margin = new Thickness(x - 10, y - 10, 0, 0);
             elipsa.Width = 20;
             elipsa.Height = 20;
+            elipsa.Focusable = true;
 
-            TextBlock textBlock = new TextBlock();
+            //SolidColorBrush mySolidColorBrush = new SolidColorBrush();
+            //mySolidColorBrush.Color = Color.FromArgb(255, 255, 255, 0);
+            //elipsa.Fill = mySolidColorBrush;
+
+
+
+
+            textBlock = new TextBlock();
             textBlock.FontSize = 7;
             textBlock.Inlines.Add(new Bold(new Run("245")));
             textBlock.TextAlignment = TextAlignment.Center;
@@ -148,19 +164,41 @@ namespace Krasnokam
             textBlock.Height = 15;
 
             //add (draw) ellipse to canvas  
-            grid.Children.Add(elipsa);
-            grid.Children.Add(textBlock);
-            arrr = grid.Children;
+            cnv.Children.Add(elipsa);
+            cnv.Children.Add(textBlock);
+            arrr = cnv.Children;
+           
+        }               
+        private void OnElipseMouseRightButtonDown(object sender, MouseButtonEventArgs e)                         // ПКМ по эллипсу
+        {
+            Point posNow = e.GetPosition(cnv);
+        }
+        private void UIElement_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            /*
+                var name = (e.OriginalSource as FrameworkElement).Name;
+                if (name.Length > 0)
+                {
+                    MessageBox.Show(name);
+            */
         }
 
 
-        private void DataGridMain_Loaded(object sender, RoutedEventArgs e)      // загрузка данных в DataGrid
+
+
+
+
+
+
+
+
+        private void DataGridMain_Loaded(object sender, RoutedEventArgs e)                                       // загрузка данных в DataGrid
         {
             //DataGridMain.ItemsSource = null;
             //DataGridMain.ItemsSource = global.ROWS;
         }
 
-        private void DataGridMain_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e) // изменение значений строки
+        private void DataGridMain_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)   // изменение значений строки
         {
             /*
             Change_of_Data_on_the_Wagon change_Of_Data = new Change_of_Data_on_the_Wagon();
@@ -192,7 +230,7 @@ namespace Krasnokam
             DataGridMain.ItemsSource = global.ROWS;
             */
         }
-        private void matButton_Click(object sender, RoutedEventArgs e)          // изменение материала 
+        private void matButton_Click(object sender, RoutedEventArgs e)                                           // изменение материала 
         {
             /*
             ShowChange_Mat_String Change_Mat_String = new ShowChange_Mat_String();
@@ -202,6 +240,11 @@ namespace Krasnokam
             DataGridMain.ItemsSource = global.ROWS;
             */
         }
+
+
+
+
+
 
 
     }
