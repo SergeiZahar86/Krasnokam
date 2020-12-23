@@ -86,17 +86,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="App.cs" />
     <Compile Include="changePassword.xaml.cs">
       <DependentUpon>changePassword.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DraggableSquare.xaml.cs">
+      <DependentUpon>DraggableSquare.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainVM.cs" />
     <Compile Include="SignIn.xaml.cs">
       <DependentUpon>SignIn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SimpleCommand.cs" />
+    <Compile Include="SquareVM.cs" />
+    <Compile Include="VM.cs" />
     <Page Include="changePassword.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DictionaryResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DraggableSquare.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
