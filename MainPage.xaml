@@ -8,7 +8,9 @@
       mc:Ignorable="d" d:DesignHeight="1050" d:DesignWidth="1920"
       Title="MainPage">
 
-  
+    <Page.Resources>
+        
+    </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -63,9 +65,7 @@
                         <ScaleTransform x:Name="scaleTransform"/>
                     </TransformGroup>
                 </Canvas.LayoutTransform>
-                <Viewbox >
                     <Image Source="Resources\Map.png" Width="1020" Height="1010"/>
-                </Viewbox>
             </Canvas>
 
 
