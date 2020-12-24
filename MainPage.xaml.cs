@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -13,8 +14,13 @@ namespace Krasnokam
     /// </summary>
     public partial class MainPage : Page
     {
-
-
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        double FirstXPos, FirstYPos, FirstArrowXPos, FirstArrowYPos;
+        object MovingObject;
+        Line Path1, Path2, Path3, Path4;
+        Rectangle FirstPosition, CurrentPosition;
+        List<Double> Dots;  // Настройка линий, по которым мы хотим показать путь движения
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -31,6 +37,9 @@ namespace Krasnokam
         List<Ellipse> www;
         public MainPage()
         {
+
+
+            // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             stckNmbr = 1;
             global = Global.getInstance();
             InitializeComponent();
@@ -48,6 +57,7 @@ namespace Krasnokam
             cnv.PreviewMouseRightButtonDown += OnCanvasPreviewMouseRightButtonDown;
             elipsa.PreviewMouseRightButtonDown += OnElipseMouseRightButtonDown;
 
+            cnv.PreviewMouseMove += this.MouseMove;
         }
         void OnMouseMove(object sender, MouseEventArgs e) // перемещение курсора над картой. Сдвиг картинки.
         {
@@ -199,6 +209,64 @@ namespace Krasnokam
 
             border.Child = textBlock;
             cnv.Children.Add(border);
+            // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            border.PreviewMouseLeftButtonDown += this.MouseLeftButtonDown;
+            border.PreviewMouseLeftButtonUp += this.PreviewMouseLeftButtonUp;
+            border.Cursor = Cursors.Hand;
+               
+            
+            // Настройка линий, по которым мы хотим показать путь движения
+            Dots = new List<double>();
+
+            Dots.Add(1);
+            Dots.Add(2);
+            Path1 = new Line();
+            Path1.Width = cnv.Width;
+            Path1.Height = cnv.Height;
+            Path1.Stroke = Brushes.DarkGray;
+            Path1.StrokeDashArray = new DoubleCollection(Dots);
+
+            Path2 = new Line();
+            Path2.Width = cnv.Width;
+            Path2.Height = cnv.Height;
+            Path2.Stroke = Brushes.DarkGray;
+            Path2.StrokeDashArray = new DoubleCollection(Dots);
+
+            Path3 = new Line();
+            Path3.Width = cnv.Width;
+            Path3.Height = cnv.Height;
+            Path3.Stroke = Brushes.DarkGray;
+            Path3.StrokeDashArray = new DoubleCollection(Dots);
+
+            Path4 = new Line();
+            Path4.Width = cnv.Width;
+            Path4.Height = cnv.Height;
+            Path4.Stroke = Brushes.DarkGray;
+            Path4.StrokeDashArray = new DoubleCollection(Dots);
+
+            FirstPosition = new Rectangle();
+            FirstPosition.Stroke = Brushes.DarkGray;
+            FirstPosition.StrokeDashArray = new DoubleCollection(Dots);
+
+            CurrentPosition = new Rectangle();
+            CurrentPosition.Stroke = Brushes.DarkGray;
+            CurrentPosition.StrokeDashArray = new DoubleCollection(Dots);
+
+            // Добавление линий на главную панель проектирования (холст)
+            cnv.Children.Add(Path1);
+            cnv.Children.Add(Path2);
+            cnv.Children.Add(Path3);
+            cnv.Children.Add(Path4);
+            cnv.Children.Add(FirstPosition);
+            cnv.Children.Add(CurrentPosition);
+
+
+
+
+
+
+
 
             /*elipsa = new Ellipse(); //create ellipse
             elipsa.StrokeThickness = 2;
@@ -228,7 +296,103 @@ namespace Krasnokam
             cnv.Children.Add(textBlock);
             arrr = cnv.Children;*/
 
-        }               
+
+
+        }
+        // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // В этом случае мы получаем текущую позицию мыши на элементе управления, чтобы использовать его в событии MouseMove.
+            FirstXPos = e.GetPosition(sender as Control).X;
+            FirstYPos = e.GetPosition(sender as Control).Y;
+            var v = (sender as FrameworkElement).Parent;
+            /*FirstArrowXPos = e.GetPosition((sender as Control).Parent as Control).X - FirstXPos;
+            FirstArrowYPos = e.GetPosition((sender as Control).Parent as Control).Y - FirstYPos;*/
+            FirstArrowXPos = e.GetPosition((sender as FrameworkElement).Parent as FrameworkElement).X - FirstXPos;
+            FirstArrowYPos = e.GetPosition((sender as FrameworkElement).Parent as FrameworkElement).Y - FirstYPos;
+            MovingObject = sender;
+        }
+        void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            // В этом случае мы должны установить видимость линий на Скрытый
+            MovingObject = null;
+            Path1.Visibility = System.Windows.Visibility.Hidden;
+            Path2.Visibility = System.Windows.Visibility.Hidden;
+            Path3.Visibility = System.Windows.Visibility.Hidden;
+            Path4.Visibility = System.Windows.Visibility.Hidden;
+            FirstPosition.Visibility = System.Windows.Visibility.Hidden;
+            CurrentPosition.Visibility = System.Windows.Visibility.Hidden;
+        }
+        private void MouseMove(object sender, MouseEventArgs e)
+        {
+            /*
+             * В этом случае сначала проверяем состояние левой кнопки мыши. Если он нажат и
+             * объект отправителя события похож на наш движущийся объект, мы можем перемещать наш элемент управления с помощью
+             * некоторые эффекты.
+             */
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                // Перемещение объектов начинаем с задания позиций линий.
+                Path1.X1 = FirstArrowXPos;
+                Path1.Y1 = FirstArrowYPos;
+                Path1.X2 = e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).X - FirstXPos;
+                Path1.Y2 = e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).Y - FirstYPos;
+
+                Path2.X1 = Path1.X1 + (MovingObject as FrameworkElement).ActualWidth;
+                Path2.Y1 = Path1.Y1;
+                Path2.X2 = Path1.X2 + (MovingObject as FrameworkElement).ActualWidth;
+                Path2.Y2 = Path1.Y2;
+
+                Path3.X1 = Path1.X1;
+                Path3.Y1 = Path1.Y1 + (MovingObject as FrameworkElement).ActualHeight;
+                Path3.X2 = Path1.X2;
+                Path3.Y2 = Path1.Y2 + (MovingObject as FrameworkElement).ActualHeight;
+
+                Path4.X1 = Path1.X1 + (MovingObject as FrameworkElement).ActualWidth;
+                Path4.Y1 = Path1.Y1 + (MovingObject as FrameworkElement).ActualHeight;
+                Path4.X2 = Path1.X2 + (MovingObject as FrameworkElement).ActualWidth;
+                Path4.Y2 = Path1.Y2 + (MovingObject as FrameworkElement).ActualHeight;
+
+                FirstPosition.Width = (MovingObject as FrameworkElement).ActualWidth;
+                FirstPosition.Height = (MovingObject as FrameworkElement).ActualHeight;
+                FirstPosition.SetValue(Canvas.LeftProperty, FirstArrowXPos);
+                FirstPosition.SetValue(Canvas.TopProperty, FirstArrowYPos);
+
+                CurrentPosition.Width = (MovingObject as FrameworkElement).ActualWidth;
+                CurrentPosition.Height = (MovingObject as FrameworkElement).ActualHeight;
+                CurrentPosition.SetValue(Canvas.LeftProperty, Path1.X2);
+                CurrentPosition.SetValue(Canvas.TopProperty, Path1.Y2);
+
+                Path1.Visibility = System.Windows.Visibility.Visible;
+                Path2.Visibility = System.Windows.Visibility.Visible;
+                Path3.Visibility = System.Windows.Visibility.Visible;
+                Path4.Visibility = System.Windows.Visibility.Visible;
+                FirstPosition.Visibility = System.Windows.Visibility.Visible;
+                CurrentPosition.Visibility = System.Windows.Visibility.Visible;
+
+                /*
+                 * Для изменения положения элемента управления мы должны использовать метод SetValue для установки
+                 * зависимости Canvas.LeftProperty и Canvas.TopProperty.
+                 *
+                 * Для расчета текущего положения элемента управления необходимо:
+                 * Текущая позиция курсора мыши на родительском объекте -
+                 * Положение мыши на элементе управления в начале движения -
+                 * позиция родителя элемента управления.
+                 */
+                (MovingObject as FrameworkElement).SetValue(Canvas.LeftProperty,
+                    e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).X - FirstXPos);
+
+                (MovingObject as FrameworkElement).SetValue(Canvas.TopProperty,
+                    e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).Y - FirstYPos);
+            }
+        }
+        // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
         private void OnElipseMouseRightButtonDown(object sender, MouseButtonEventArgs e)                         // ПКМ по эллипсу
         {
             Point posNow = e.GetPosition(cnv);
