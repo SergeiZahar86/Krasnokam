@@ -144,7 +144,7 @@ namespace Krasnokam
             var vvvv = arrr;
         }
         */
-        private void OnCanvasPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)                  // ПКМ по эллипсу
+        private void OnCanvasPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)                  // добавление элемента на canvas
         {
             if (global.stackNumber.Count > 1)
             {
@@ -174,9 +174,6 @@ namespace Krasnokam
                 stckNmbr = 1;
                 global.stackNumber.Add(stckNmbr);
             }
-
-
-
             double x = e.GetPosition(cnv).X; //get mouse coordinates over canvas
             double y = e.GetPosition(cnv).Y;
 
@@ -245,15 +242,6 @@ namespace Krasnokam
                     MessageBox.Show(name);
             */
         }
-
-
-
-
-
-
-
-
-
 
         private void DataGridMain_Loaded(object sender, RoutedEventArgs e)                                       // загрузка данных в DataGrid
         {
