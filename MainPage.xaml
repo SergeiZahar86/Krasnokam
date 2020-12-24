@@ -51,8 +51,7 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        
-        
+
         
         <Slider x:Name="slider" Grid.Column="0" Grid.Row="0" Grid.RowSpan="20" Orientation="Vertical" HorizontalAlignment="Left" Minimum="1"/>
         

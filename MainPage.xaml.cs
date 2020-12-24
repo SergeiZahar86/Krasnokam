@@ -14,9 +14,16 @@ namespace Krasnokam
     public partial class MainPage : Page
     {
 
+
+
+
+
+        private Global global;
+
+        int stckNmbr;                        // номер штабеля
+        Border border;
         Ellipse elipsa;
         TextBlock textBlock;
-
         Point? lastCenterPositionOnTarget;
         Point? lastMousePositionOnTarget;
         Point? lastDragPoint;
@@ -24,10 +31,12 @@ namespace Krasnokam
         List<Ellipse> www;
         public MainPage()
         {
-
+            stckNmbr = 1;
+            global = Global.getInstance();
             InitializeComponent();
             elipsa = new Ellipse();
             textBlock = new TextBlock();
+            border = new Border();
 
             scrollViewer.ScrollChanged += OnScrollViewerScrollChanged;  // Происходит при обнаружении изменений в положении прокрутки, экстенте или размере окна просмотра.
             scrollViewer.MouseLeftButtonUp += OnMouseLeftButtonUp;
@@ -137,10 +146,64 @@ namespace Krasnokam
         */
         private void OnCanvasPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)                  // ПКМ по эллипсу
         {
+            if (global.stackNumber.Count > 1)
+            {
+                for (int f = 1; f < global.stackNumber.Count; f++)
+                {
+                    if((global.stackNumber[f] - global.stackNumber[f-1]) > 1)
+                    {
+                        stckNmbr = f + 1;
+                        global.stackNumber.Insert(f, stckNmbr);
+                        break;
+                    }
+                    if((global.stackNumber.Count - f) == 1)
+                    {
+                        stckNmbr = f + 2;
+                        global.stackNumber.Add(stckNmbr);
+                        break;
+                    }
+                }
+            }
+            else if(global.stackNumber.Count == 1)
+            {
+                stckNmbr = 2;
+                global.stackNumber.Add(stckNmbr);
+            }
+            else
+            {
+                stckNmbr = 1;
+                global.stackNumber.Add(stckNmbr);
+            }
+
+
+
             double x = e.GetPosition(cnv).X; //get mouse coordinates over canvas
             double y = e.GetPosition(cnv).Y;
 
-            elipsa = new Ellipse(); //create ellipse
+            border = new Border();
+            border.Width = 25;
+            border.Height = 25;
+            border.Margin = new Thickness(x - 10, y - 10, 0, 0);
+            border.CornerRadius = new CornerRadius(15);
+            border.BorderBrush = Brushes.Red;
+            border.BorderThickness = new Thickness(2);
+            border.Focusable = true;
+
+
+            textBlock = new TextBlock();
+            textBlock.FontSize = 10;
+            textBlock.Inlines.Add(new Bold(new Run(stckNmbr.ToString())));
+            textBlock.Foreground = Brushes.Black;
+            textBlock.TextAlignment = TextAlignment.Center;
+            textBlock.VerticalAlignment = VerticalAlignment.Center;
+            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+            textBlock.Padding = new Thickness(0, 0, 0, 1);
+
+
+            border.Child = textBlock;
+            cnv.Children.Add(border);
+
+            /*elipsa = new Ellipse(); //create ellipse
             elipsa.StrokeThickness = 2;
             elipsa.Stroke = Brushes.Red;
             elipsa.Margin = new Thickness(x - 10, y - 10, 0, 0);
@@ -166,8 +229,8 @@ namespace Krasnokam
             //add (draw) ellipse to canvas  
             cnv.Children.Add(elipsa);
             cnv.Children.Add(textBlock);
-            arrr = cnv.Children;
-           
+            arrr = cnv.Children;*/
+
         }               
         private void OnElipseMouseRightButtonDown(object sender, MouseButtonEventArgs e)                         // ПКМ по эллипсу
         {
