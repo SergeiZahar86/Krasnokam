@@ -264,24 +264,9 @@ namespace Krasnokam
         }
         private void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            // В этом случае мы должны установить видимость линий на Скрытый
-            MovingObject = null;                                  //  Если раскомментировать то при попытке перемещения пустоты выскакивает исключение 
+            MovingObject = null;  //  Освобождаем объект 
         }
         // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void OnElipseMouseRightButtonDown(object sender, MouseButtonEventArgs e)                         // ПКМ по эллипсу
-        {
-            Point posNow = e.GetPosition(cnv);
-        }
-        private void UIElement_OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            /*
-                var name = (e.OriginalSource as FrameworkElement).Name;
-                if (name.Length > 0)
-                {
-                    MessageBox.Show(name);
-            */
-        }
 
         private void DataGridMain_Loaded(object sender, RoutedEventArgs e)                                       // загрузка данных в DataGrid
         {
