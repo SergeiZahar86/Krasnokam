@@ -11,7 +11,7 @@ namespace Krasnokam
     {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         double FirstXPos, FirstYPos;
-        object MovingObject;
+        Border MovingObject;
         bool boolBorder;          // флаг наведения на бордер
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,6 @@ namespace Krasnokam
         Point? lastDragPoint;                // представляет пару координат X и Y в двухмерном пространстве
         public MainPage()
         {
-
             // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             stckNmbr = 1;
             global = Global.getInstance();
@@ -43,11 +42,7 @@ namespace Krasnokam
             slider.ValueChanged += OnSliderValueChanged;
             cnv.PreviewMouseRightButtonDown += OnCanvasPreviewMouseRightButtonDown;
             // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
             cnv.PreviewMouseMove += this.MouseMove;
-            //cnv.PreviewMouseMove += OnMouseMove;
-
-            
         }
         void OnMouseMove(object sender, MouseEventArgs e) // перемещение курсора над картой. Сдвиг картинки.
         {
@@ -61,17 +56,11 @@ namespace Krasnokam
                     lastDragPoint = posNow;
                     scrollViewer.ScrollToHorizontalOffset(scrollViewer.HorizontalOffset - dX);  // Прокручивает содержимое в ScrollViewer до указанной позиции горизонтального смещения.
                     scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - dY);      // Прокручивает содержимое в ScrollViewer до указанной позиции вертикального смещения.
-
-
                 }
             }
         }
         void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)  // ЛКМ по карте для записи координат клика и изменения вида курсора
         {
-            /* FirstXPos = e.GetPosition(sender as Control).X;
-             FirstYPos = e.GetPosition(sender as Control).Y;
-             var v = (sender as FrameworkElement).Parent;
-             MovingObject = sender;*/
             if (!boolBorder)
             {
                 var mousePos = e.GetPosition(scrollViewer);
@@ -98,7 +87,6 @@ namespace Krasnokam
         }
         void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e) // отжатие ЛКМ
         {
-            
                 scrollViewer.Cursor = Cursors.Arrow;   // меняем вид курсора
                 scrollViewer.ReleaseMouseCapture();    // Освобождает мышь, если элемент произвел ее захват.
                 lastDragPoint = null;
@@ -193,7 +181,7 @@ namespace Krasnokam
             border = new Border();
             border.Width = 25;
             border.Height = 25;
-            border.Margin = new Thickness(x - 10, y - 10, 0, 0);
+            border.Margin = new Thickness(x - 12, y - 12, 0, 0);
             border.CornerRadius = new CornerRadius(15);
             border.BorderBrush = Brushes.Red;
             border.Background = Brushes.LightPink;
@@ -213,10 +201,9 @@ namespace Krasnokam
 
             border.Child = textBlock;
             cnv.Children.Add(border);
-            // ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // назначение обработчиков событий ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             border.PreviewMouseLeftButtonDown += MouseLeftButtonDown;
-            //border.PreviewMouseLeftButtonDown += OnMouseLeftButtonDown;
             border.PreviewMouseLeftButtonUp += PreviewMouseLeftButtonUp;
             border.PreviewMouseMove += MouseMoveBorder;
             border.MouseLeave += MouseLeave;
@@ -227,25 +214,24 @@ namespace Krasnokam
         private void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // В этом случае мы получаем текущую позицию мыши на элементе управления, чтобы использовать его в событии MouseMove.
-            FirstXPos = e.GetPosition(sender as Control).X;
-            FirstYPos = e.GetPosition(sender as Control).Y;
+            FirstXPos = e.GetPosition(cnv).X;
+            FirstYPos = e.GetPosition(cnv).Y;
+
             var v = (sender as FrameworkElement).Parent;
            
-            MovingObject = sender;
-            //MessageBox.Show("Нажатие");
-            //Thread.Sleep(1000);
+            MovingObject = (Border)sender;
         }
         private void MouseMoveBorder(object sender, MouseEventArgs e) // курсор находится над бордером
         {
             var v = sender;
             boolBorder = true;
         }
-        private void MouseLeave(object sender, MouseEventArgs e) // курсор уходит за пределя бордера
+        private void MouseLeave(object sender, MouseEventArgs e) // курсор уходит за пределы бордера
         {
             var v = sender;
             boolBorder = false;
         }
-        private void MouseMove(object sender, MouseEventArgs e)
+        private void MouseMove(object sender, MouseEventArgs e) // перемещение бордера по канвасу
         {
             /*
              * В этом случае сначала проверяем состояние левой кнопки мыши. Если он нажат и
@@ -254,10 +240,6 @@ namespace Krasnokam
              */
             if (e.LeftButton == MouseButtonState.Pressed)  // если нажата левая клавиша мыши
             {
-                /*if (boolBorder)
-                {*/
-                    //MessageBox.Show("Движение");
-
                     /*
                      * Для изменения положения элемента управления мы должны использовать метод SetValue для установки
                      * зависимости Canvas.LeftProperty и Canvas.TopProperty.
@@ -267,23 +249,20 @@ namespace Krasnokam
                      * Положение мыши на элементе управления в начале движения -
                      * позиция родителя элемента управления.
                      */
-                    var v = e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).X;
-                    (MovingObject as FrameworkElement).SetValue(Canvas.LeftProperty,
+                var vv = FirstXPos;
+               
+                (MovingObject as FrameworkElement).SetValue(Canvas.LeftProperty,
                         e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).X - FirstXPos);
 
-                    var s = e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).Y;
-                    (MovingObject as FrameworkElement).SetValue(Canvas.TopProperty,
-                        e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).Y - FirstYPos);
+                var ss = FirstYPos;
 
-                    /*(MovingObject as FrameworkElement).SetValue(Canvas.LeftProperty,
-                        e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).X - FirstXPos);
+                (MovingObject as FrameworkElement).SetValue(Canvas.TopProperty,
+                    e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).Y - FirstYPos);
 
-                    (MovingObject as FrameworkElement).SetValue(Canvas.TopProperty,
-                        e.GetPosition((MovingObject as FrameworkElement).Parent as FrameworkElement).Y - FirstYPos);*/
-                //}
+                MovingObject.Margin = new Thickness(vv - 12, ss - 12, 0, 0);
             }
         }
-        void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private void PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             // В этом случае мы должны установить видимость линий на Скрытый
             MovingObject = null;                                  //  Если раскомментировать то при попытке перемещения пустоты выскакивает исключение 
