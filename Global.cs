@@ -10,9 +10,11 @@ namespace Krasnokam
     {
         private static Global instance;
         public List<int> stackNumber;      // номера штабелей
+        public List<StackTab> stackTabs;   // список штабелей
         Global()
         {
             stackNumber = new List<int>();
+            stackTabs = new List<StackTab>();
         }
 
         public static Global getInstance() // возвращает singleton объекта Global

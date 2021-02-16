@@ -43,6 +43,9 @@ namespace Krasnokam
             cnv.PreviewMouseRightButtonDown += OnCanvasPreviewMouseRightButtonDown;
             // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             cnv.PreviewMouseMove += this.MouseMove;
+
+            DataGridMain.ItemsSource = null;
+            DataGridMain.ItemsSource = global.stackTabs;
         }
         void OnMouseMove(object sender, MouseEventArgs e) // перемещение курсора над картой. Сдвиг картинки.
         {
@@ -145,7 +148,7 @@ namespace Krasnokam
                 }
             }
         }
-        private void OnCanvasPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)                  // добавление элемента на canvas
+        private void OnCanvasPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)   // добавление элемента на canvas
         {
             if (global.stackNumber.Count > 1)
             {
@@ -175,6 +178,14 @@ namespace Krasnokam
                 stckNmbr = 1;
                 global.stackNumber.Add(stckNmbr);
             }
+
+            StackTab stktb = new StackTab(stckNmbr, "hz", 0.0, 0.0, "hz", 0.0, 0.0, "hz");
+            global.stackTabs.Add(stktb);
+
+            DataGridMain.ItemsSource = null;
+            DataGridMain.ItemsSource = global.stackTabs;
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             double x = e.GetPosition(cnv).X; //get mouse coordinates over canvas
             double y = e.GetPosition(cnv).Y;
 
@@ -270,8 +281,8 @@ namespace Krasnokam
 
         private void DataGridMain_Loaded(object sender, RoutedEventArgs e)                                       // загрузка данных в DataGrid
         {
-            //DataGridMain.ItemsSource = null;
-            //DataGridMain.ItemsSource = global.ROWS;
+            DataGridMain.ItemsSource = null;
+            DataGridMain.ItemsSource = global.stackTabs;
         }
 
         private void DataGridMain_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)   // изменение значений строки

@@ -72,7 +72,8 @@
 
         </ScrollViewer>
 
-        <DataGrid x:Name="DataGridMain" Grid.Row="0" Grid.RowSpan="20" Grid.Column="11" Grid.ColumnSpan="8" Padding="2" ColumnWidth="*" 
+        <DataGrid x:Name="DataGridMain" Grid.Row="0" Grid.RowSpan="20" Grid.Column="11" Grid.ColumnSpan="8"
+                  Padding="2" ColumnWidth="*" 
                   AutoGenerateColumns="False" ItemsSource="{Binding}"
                   VerticalAlignment="Top" HorizontalAlignment="Stretch" FontSize="16" 
                   FontFamily="Calibri" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
@@ -108,12 +109,12 @@
                                         HeaderStyle="{StaticResource CenterGridHeaderStyle}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Car_id}"  HorizontalAlignment="Center"
+                            <TextBlock Text="{Binding Stack_id}"  HorizontalAlignment="Center"
                                        VerticalAlignment="Center" ToolTipService.ShowDuration="15000" 
                                        >
                                 <TextBlock.ToolTip >
                                     <ToolTip>
-                                        <TextBlock Text="{Binding Car_id}" FontSize="22" Foreground="Black" 
+                                        <TextBlock Text="{Binding Stack_id}" FontSize="22" Foreground="Black" 
                                                     Background="White" />
                                     </ToolTip>
                                 </TextBlock.ToolTip>
@@ -129,11 +130,11 @@
                                     Style="{StaticResource SomeButton}"
                                     Background="Transparent" Click="matButton_Click"
                                     BorderBrush="White"  >
-                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                <TextBlock Text="{Binding Material}"  HorizontalAlignment="Center"
                                            VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
                                     <TextBlock.ToolTip >
                                         <ToolTip>
-                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                            <TextBlock Text="{Binding Material}" FontSize="22" Foreground="Black" 
                                                         Background="White" />
                                         </ToolTip>
                                     </TextBlock.ToolTip>
@@ -150,11 +151,11 @@
                                     Style="{StaticResource SomeButton}"
                                     Background="Transparent" Click="matButton_Click"
                                     BorderBrush="White"  >
-                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                <TextBlock Text="{Binding Cinder}"  HorizontalAlignment="Center"
                                            VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
                                     <TextBlock.ToolTip >
                                         <ToolTip>
-                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                            <TextBlock Text="{Binding Cinder}" FontSize="22" Foreground="Black" 
                                                         Background="White" />
                                         </ToolTip>
                                     </TextBlock.ToolTip>
@@ -171,11 +172,11 @@
                                     Style="{StaticResource SomeButton}"
                                     Background="Transparent" Click="matButton_Click"
                                     BorderBrush="White"  >
-                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                <TextBlock Text="{Binding Humidity}"  HorizontalAlignment="Center"
                                            VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
                                     <TextBlock.ToolTip >
                                         <ToolTip>
-                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                            <TextBlock Text="{Binding Humidity}" FontSize="22" Foreground="Black" 
                                                         Background="White" />
                                         </ToolTip>
                                     </TextBlock.ToolTip>
@@ -192,11 +193,11 @@
                                     Style="{StaticResource SomeButton}"
                                     Background="Transparent" Click="matButton_Click"
                                     BorderBrush="White"  >
-                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                <TextBlock Text="{Binding Task}"  HorizontalAlignment="Center"
                                            VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
                                     <TextBlock.ToolTip >
                                         <ToolTip>
-                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                            <TextBlock Text="{Binding Task}" FontSize="22" Foreground="Black" 
                                                         Background="White" />
                                         </ToolTip>
                                     </TextBlock.ToolTip>
@@ -213,11 +214,11 @@
                                     Style="{StaticResource SomeButton}"
                                     Background="Transparent" Click="matButton_Click"
                                     BorderBrush="White"  >
-                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                <TextBlock Text="{Binding Weight_now}"  HorizontalAlignment="Center"
                                            VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
                                     <TextBlock.ToolTip >
                                         <ToolTip>
-                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                            <TextBlock Text="{Binding Weight_now}" FontSize="22" Foreground="Black" 
                                                         Background="White" />
                                         </ToolTip>
                                     </TextBlock.ToolTip>
@@ -234,11 +235,11 @@
                                     Style="{StaticResource SomeButton}"
                                     Background="Transparent" Click="matButton_Click"
                                     BorderBrush="White"  >
-                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                <TextBlock Text="{Binding Weight_actually}"  HorizontalAlignment="Center"
                                            VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
                                     <TextBlock.ToolTip >
                                         <ToolTip>
-                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                            <TextBlock Text="{Binding Weight_actually}" FontSize="22" Foreground="Black" 
                                                         Background="White" />
                                         </ToolTip>
                                     </TextBlock.ToolTip>
@@ -255,11 +256,11 @@
                                     Style="{StaticResource SomeButton}"
                                     Background="Transparent" Click="matButton_Click"
                                     BorderBrush="White"  >
-                                <TextBlock Text="{Binding Mat_String}"  HorizontalAlignment="Center"
+                                <TextBlock Text="{Binding Status}"  HorizontalAlignment="Center"
                                            VerticalAlignment="Center" ToolTipService.ShowDuration="15000"  >
                                     <TextBlock.ToolTip >
                                         <ToolTip>
-                                            <TextBlock Text="{Binding Mat_String}" FontSize="22" Foreground="Black" 
+                                            <TextBlock Text="{Binding Status}" FontSize="22" Foreground="Black" 
                                                         Background="White" />
                                         </ToolTip>
                                     </TextBlock.ToolTip>
