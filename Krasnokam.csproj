@@ -86,15 +86,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="changePassword.xaml.cs">
+    <Compile Include="DialogWindows\ChangeDataStack.xaml.cs">
+      <DependentUpon>ChangeDataStack.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DialogWindows\changePassword.xaml.cs">
       <DependentUpon>changePassword.xaml</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="StackTab.cs" />
-    <Compile Include="SignIn.xaml.cs">
+    <Compile Include="DialogWindows\SignIn.xaml.cs">
       <DependentUpon>SignIn.xaml</DependentUpon>
     </Compile>
-    <Page Include="changePassword.xaml">
+    <Page Include="DialogWindows\ChangeDataStack.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DialogWindows\changePassword.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -102,7 +109,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
+    <Page Include="Pages\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -114,14 +121,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
+    <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="SignIn.xaml">
+    <Page Include="DialogWindows\SignIn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -64,7 +64,7 @@
                         <ScaleTransform x:Name="scaleTransform"/>
                     </TransformGroup>
                 </Canvas.LayoutTransform>
-                    <Image Source="Resources\Map.png" Width="1020" Height="1010"/>
+                    <Image Source="..\Resources\Map.png" Width="1020" Height="1010"/>
             </Canvas>
 
 

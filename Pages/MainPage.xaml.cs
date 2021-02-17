@@ -1,4 +1,4 @@
-﻿using System.Threading;
+﻿using Krasnokam.DialogWindows;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -11,8 +11,8 @@ namespace Krasnokam
     {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         double FirstXPos, FirstYPos;
-        Border MovingObject;
-        bool boolBorder;          // флаг наведения на бордер
+        Border MovingObject;           // внешний бордер метки
+        bool boolBorder;               // флаг наведения на бордер
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private Global global;
@@ -150,78 +150,113 @@ namespace Krasnokam
         }
         private void OnCanvasPreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)   // добавление элемента на canvas
         {
-            if (global.stackNumber.Count > 1)
+            //MovingObject = (Border)sender; // Получаем объект по клику
+            //var ddr = sender; // Получаем объект по клику
+            if (!boolBorder)
             {
-                for (int f = 1; f < global.stackNumber.Count; f++)
+                if (global.stackNumber.Count > 1)
                 {
-                    if((global.stackNumber[f] - global.stackNumber[f-1]) > 1)
+                    for (int f = 1; f < global.stackNumber.Count; f++)
                     {
-                        stckNmbr = f + 1;
-                        global.stackNumber.Insert(f, stckNmbr);
-                        break;
-                    }
-                    if((global.stackNumber.Count - f) == 1)
-                    {
-                        stckNmbr = f + 2;
-                        global.stackNumber.Add(stckNmbr);
-                        break;
+                        if ((global.stackNumber[f] - global.stackNumber[f - 1]) > 1)
+                        {
+                            stckNmbr = f + 1;
+                            global.stackNumber.Insert(f, stckNmbr);
+                            break;
+                        }
+                        if ((global.stackNumber.Count - f) == 1)
+                        {
+                            stckNmbr = f + 2;
+                            global.stackNumber.Add(stckNmbr);
+                            break;
+                        }
                     }
                 }
-            }
-            else if(global.stackNumber.Count == 1)
-            {
-                stckNmbr = 2;
-                global.stackNumber.Add(stckNmbr);
+                else if (global.stackNumber.Count == 1)
+                {
+                    stckNmbr = 2;
+                    global.stackNumber.Add(stckNmbr);
+                }
+                else
+                {
+                    stckNmbr = 1;
+                    global.stackNumber.Add(stckNmbr);
+                }
+
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                double x = e.GetPosition(cnv).X; //get mouse coordinates over canvas
+                double y = e.GetPosition(cnv).Y;
+
+                border = new Border();
+                border.Width = 25;
+                border.Height = 25;
+                border.Margin = new Thickness(x - 12, y - 12, 0, 0);
+                var ddd = border.Margin.Left;
+                border.CornerRadius = new CornerRadius(15);
+                border.BorderBrush = Brushes.Red;
+                border.Background = Brushes.LightPink;
+                border.BorderThickness = new Thickness(2);
+                border.Focusable = true;
+                border.Tag = stckNmbr.ToString(); // для поиска метки по клику правой кнопки мыши
+
+
+
+                textBlock = new TextBlock();
+                textBlock.FontSize = 10;
+                textBlock.Inlines.Add(new Bold(new Run(stckNmbr.ToString())));
+                textBlock.Foreground = Brushes.Black;
+                textBlock.TextAlignment = TextAlignment.Center;
+                textBlock.VerticalAlignment = VerticalAlignment.Center;
+                textBlock.HorizontalAlignment = HorizontalAlignment.Center;
+                textBlock.Padding = new Thickness(0, 0, 0, 1);
+
+                // добавляем объект метки в список
+                StackTab stktb = new StackTab(stckNmbr, "hz", 0.0, 0.0, "hz", 0.0, 0.0, "hz", border.Margin.Left,
+                    border.Margin.Top, border.Margin.Right, border.Margin.Bottom);
+                global.stackTabs.Add(stktb);
+                // обновляем таблицу
+                DataGridMain.ItemsSource = null;
+                DataGridMain.ItemsSource = global.stackTabs;
+
+                // добавляем метку на канвас
+                border.Child = textBlock;
+                cnv.Children.Add(border);
+                // назначение обработчиков событий ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                border.PreviewMouseLeftButtonDown += MouseLeftButtonDown;
+                border.PreviewMouseRightButtonDown += MouseRightButtonDown;
+                border.PreviewMouseLeftButtonUp += PreviewMouseLeftButtonUp;
+                border.PreviewMouseMove += MouseMoveBorder;
+                border.MouseLeave += MouseLeave;
+                border.Cursor = Cursors.Hand;
             }
             else
             {
-                stckNmbr = 1;
-                global.stackNumber.Add(stckNmbr);
+
             }
-
-            StackTab stktb = new StackTab(stckNmbr, "hz", 0.0, 0.0, "hz", 0.0, 0.0, "hz");
-            global.stackTabs.Add(stktb);
-
-            DataGridMain.ItemsSource = null;
-            DataGridMain.ItemsSource = global.stackTabs;
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            double x = e.GetPosition(cnv).X; //get mouse coordinates over canvas
-            double y = e.GetPosition(cnv).Y;
-
-            border = new Border();
-            border.Width = 25;
-            border.Height = 25;
-            border.Margin = new Thickness(x - 12, y - 12, 0, 0);
-            border.CornerRadius = new CornerRadius(15);
-            border.BorderBrush = Brushes.Red;
-            border.Background = Brushes.LightPink;
-            border.BorderThickness = new Thickness(2);
-            border.Focusable = true;
-
-
-            textBlock = new TextBlock();
-            textBlock.FontSize = 10;
-            textBlock.Inlines.Add(new Bold(new Run(stckNmbr.ToString())));
-            textBlock.Foreground = Brushes.Black;
-            textBlock.TextAlignment = TextAlignment.Center;
-            textBlock.VerticalAlignment = VerticalAlignment.Center;
-            textBlock.HorizontalAlignment = HorizontalAlignment.Center;
-            textBlock.Padding = new Thickness(0, 0, 0, 1);
-
-
-            border.Child = textBlock;
-            cnv.Children.Add(border);
-            // назначение обработчиков событий ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            border.PreviewMouseLeftButtonDown += MouseLeftButtonDown;
-            border.PreviewMouseLeftButtonUp += PreviewMouseLeftButtonUp;
-            border.PreviewMouseMove += MouseMoveBorder;
-            border.MouseLeave += MouseLeave;
-            border.Cursor = Cursors.Hand;
-
         }
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        private void MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MovingObject = (Border)sender; // Получаем объект по клику
+
+            foreach(StackTab stack in global.stackTabs)
+            {
+                if(stack.Stack_id.ToString() == MovingObject.Tag.ToString())
+                {
+                    ChangeDataStack dataStack = new ChangeDataStack();
+                    dataStack.ShowDialog();
+                    /*stack.Stack_id = 8;
+                    break;*/
+                }
+            }
+            DataGridMain.ItemsSource = null;
+            DataGridMain.ItemsSource = global.stackTabs;
+
+            //MessageBox.Show("Была нажата правая клавиша мыши");
+        }
         private void MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // В этом случае мы получаем текущую позицию мыши на элементе управления, чтобы использовать его в событии MouseMove.
@@ -230,7 +265,7 @@ namespace Krasnokam
 
             var v = (sender as FrameworkElement).Parent;
            
-            MovingObject = (Border)sender;
+            MovingObject = (Border)sender; // Получаем объект по клику
         }
         private void MouseMoveBorder(object sender, MouseEventArgs e) // курсор находится над бордером
         {
