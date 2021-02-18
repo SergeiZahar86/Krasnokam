@@ -16,7 +16,6 @@ namespace Krasnokam
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         private Global global;
-
         int stckNmbr;                        // номер штабеля
         Border border;
         TextBlock textBlock;
@@ -223,6 +222,11 @@ namespace Krasnokam
                 // добавляем метку на канвас
                 border.Child = textBlock;
                 cnv.Children.Add(border);
+                global.Bord.Clear();
+                for(int i = 0; i < cnv.Children.Count; i++)
+                {
+                    global.Bord.Add(cnv.Children[i]);
+                }
                 // назначение обработчиков событий ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 border.PreviewMouseLeftButtonDown += MouseLeftButtonDown;
@@ -240,18 +244,51 @@ namespace Krasnokam
         // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         private void MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            //bool remove_border = true;
             MovingObject = (Border)sender; // Получаем объект по клику
 
-            foreach(StackTab stack in global.stackTabs)
+            foreach(StackTab stack in global.stackTabs) // ищем в табличном списке
             {
                 if(stack.Stack_id.ToString() == MovingObject.Tag.ToString())
                 {
-                    ChangeDataStack dataStack = new ChangeDataStack();
-                    dataStack.ShowDialog();
-                    /*stack.Stack_id = 8;
-                    break;*/
+                    for ( int i = 1; i < cnv.Children.Count; i++) // ищем на canvas
+                    {
+                        Border border = (Border)cnv.Children[i];
+                        if(border.Tag.ToString() == MovingObject.Tag.ToString())
+                        {
+                            global.Stack_id = stack.Stack_id;
+                            global.Material = stack.Material;
+                            global.Cinder = stack.Cinder;
+                            global.Humidity = stack.Humidity;
+                            global.Task = stack.Task;
+                            global.Weight_now = stack.Weight_now;
+                            global.Weight_actually = stack.Weight_actually;
+                            global.Status = stack.Status;
+                            global.Margin_left = border.Margin.Left;
+                            global.Margin_top = border.Margin.Top;
+                            global.Margin_right = border.Margin.Right;
+                            global.Margin_bottom = border.Margin.Bottom;
+
+                            ChangeDataStack dataStack = new ChangeDataStack();
+                            dataStack.ShowDialog();
+
+                            if (global.deleetBorder)
+                            {
+                                cnv.Children.Remove(border);
+                                global.Bord.Remove(border);
+                                global.stackTabs.Remove(stack);
+
+                                DataGridMain.ItemsSource = null;
+                                DataGridMain.ItemsSource = global.stackTabs;
+                                //remove_border = false;
+                                //break;
+                                goto m1;
+                            }
+                        }
+                    }
                 }
             }
+            m1:
             DataGridMain.ItemsSource = null;
             DataGridMain.ItemsSource = global.stackTabs;
 

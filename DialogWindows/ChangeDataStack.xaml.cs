@@ -8,52 +8,15 @@ namespace Krasnokam.DialogWindows
     public partial class ChangeDataStack : Window
     {
         private Global global;
-/*        private List<Zona> zona_Val;
-        private List<Shippers> shippersVal;
-        private List<Consigners> consignersVal;
-        private List<mat_t> matsVal;
-        private List<String> isOk_Val;
-        private List<cause_t> Cause;
-*/
-        private int zone;
-        private string zoneStr;
-        private int shipper;
-        private string shipperStr;
-        private int consigner;
-        private string consignerStr;
-        private int mat;
-        private string matStr;
-        private int att;
-        private string attStr;
-        private int cause;
-        private string causeStr;
 
 
         public ChangeDataStack()
         {
             global = Global.getInstance();
             InitializeComponent();
+        }
 
-/*            zona_Val = global.zonas;
-            zona_Value.ItemsSource = zona_Val;
-
-            shippersVal = global.shippers;
-            shipper_Value.ItemsSource = shippersVal;
-
-            consignersVal = global.consigners;
-            consigner_Value.ItemsSource = consignersVal;
-
-            matsVal = global.mats;
-            mat_Value.ItemsSource = matsVal;
-
-            isOk_Val = global.IsOk_Val;
-            isOk_Value.ItemsSource = isOk_Val;
-
-            Cause = global.cause;
-            cause_Value.ItemsSource = Cause;
-*/        }
-
-        private void Vag_PreviewTextInput(object sender, TextCompositionEventArgs e) // Валидация ввода, можно только цифры
+        private void all_PreviewTextInput(object sender, TextCompositionEventArgs e) // Валидация ввода, можно только цифры
         {
             int val;
             if (!Int32.TryParse(e.Text, out val) && e.Text != "-")
@@ -61,7 +24,7 @@ namespace Krasnokam.DialogWindows
                 e.Handled = true; // отклоняем ввод
             }
         }
-        private void Vag_PreviewKeyDown(object sender, KeyEventArgs e) // Валидация ввода, нельзя пробел
+        private void all_PreviewKeyDown(object sender, KeyEventArgs e) // Валидация ввода, нельзя пробел
         {
             if (e.Key == Key.Space)
             {
@@ -70,12 +33,12 @@ namespace Krasnokam.DialogWindows
         }
         private void point_PreviewTextInput(object sender, TextCompositionEventArgs e) // Валидация ввода, можно только цифры
         {
-            if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".")
+            /*if (!(Char.IsDigit(e.Text, 0) || (e.Text == ".")
                && (!textboxTara.Text.Contains(".")
                && textboxTara.Text.Length != 0)))
             {
                 e.Handled = true; // отклоняем ввод
-            }
+            }*/
         }
         private void point_PreviewKeyDown(object sender, KeyEventArgs e) // Валидация ввода, нельзя пробел
         {
@@ -195,6 +158,12 @@ namespace Krasnokam.DialogWindows
 */        }
         private void close_Click(object sender, RoutedEventArgs e)
         {
+            this.Close();
+        }
+        private void deleet_Click(object sender, RoutedEventArgs e)
+        {
+            VerificationDeleetStack verification = new VerificationDeleetStack();
+            verification.ShowDialog();
             this.Close();
         }
     }

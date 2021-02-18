@@ -92,6 +92,9 @@
     <Compile Include="DialogWindows\changePassword.xaml.cs">
       <DependentUpon>changePassword.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DialogWindows\VerificationDeleetStack.xaml.cs">
+      <DependentUpon>VerificationDeleetStack.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Global.cs" />
     <Compile Include="StackTab.cs" />
     <Compile Include="DialogWindows\SignIn.xaml.cs">
@@ -102,6 +105,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DialogWindows\changePassword.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DialogWindows\VerificationDeleetStack.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

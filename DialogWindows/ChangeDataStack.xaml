@@ -24,8 +24,6 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
                 <RowDefinition Height="0.5*" />
                 <RowDefinition Height="1.5*" />
 
@@ -48,7 +46,7 @@
 
             <DockPanel x:Name="TitleBar" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="11"
                        VerticalAlignment="Top" Background="#B22222" Height="30" >
-                <TextBlock HorizontalAlignment="Left" Text="Изменение данных по вагону с порядковым номером № " Foreground="White"
+                <TextBlock HorizontalAlignment="Left" Text="Изменение данных по штаболю" Foreground="White"
                            FontFamily="Calibry" FontSize="16" TextAlignment="Center" VerticalAlignment="Center" Margin="20,0,0,0"/>
                 <TextBlock x:Name="Number" HorizontalAlignment="Left"  Foreground="White"
                            FontFamily="Calibry" FontSize="16" TextAlignment="Center" VerticalAlignment="Center" Margin="5,0,0,0" />
@@ -57,86 +55,69 @@
                             RenderTransformOrigin="0.51,0.5" Margin="4,1,4,2.714" Height="Auto"/>
 
             </DockPanel>
-            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Номер вагона"/>
+            <Button x:Name="deleet" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="3" Content="Удалить штабель" IsDefault="True" Style="{StaticResource RedButton}" 
+                            Click="deleet_Click" Width="150" ToolTip="Выход"/>
+
+
+
             <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Тара"/>
+                   Content="Номер штабеля"/>
             <Label Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Тара НСИ"/>
+                   Content="Сырьё"/>
             <Label Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="▲ Тара"/>
+                   Content="Зольность, A"/>
             <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Грузоподъемность"/>
+                   Content="Влажность, W"/>
             <Label Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Зона"/>
+                   Content="Задание на смену"/>
             <Label Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Грузоотправитель"/>
+                   Content="Текущий вес, т."/>
             <Label Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Грузополучатель"/>
+                   Content="Факт за смену, т."/>
             <Label Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Вид материалов"/>
-            <Label Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Итог аттестации"/>
-            <Label Grid.Row="12" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource LabelChangeData_Head}"
-                   Content="Причина неаттестации"/>
-            <Label Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="4" Content="Действующие значения"
+                   Content="Статус"/>
+            
+            <Label Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="4" Content="Действующие значения"
                    Style="{StaticResource LabelChangeData_Head}"/>
-            <Label Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="5" Content="Новые значения"
+            <Label Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="5" Content="Новые значения"
                    Style="{StaticResource LabelChangeData_Head}" Margin="40,0,0,0"/>
 
-            <Label x:Name="oldVagNum" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}" />
-            <Label x:Name="oldTara" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="4"  Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="oldTara_e" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="4"  Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="oldTara_delta" Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="4"  Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="oldCarrying" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="4"  Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="old_zona" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="old_shipper" Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="old_consigner" Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="old_mat" Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="old_isOk" Grid.Row="11" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
-            <Label x:Name="old_cause" Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
+            <Label x:Name="stack_id" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}" />
+            <Label x:Name="material" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="4"  Style="{StaticResource LabelChangeData}"/>
+            <Label x:Name="cinder" Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="4"  Style="{StaticResource LabelChangeData}"/>
+            <Label x:Name="humidity" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="4"  Style="{StaticResource LabelChangeData}"/>
+            <Label x:Name="task" Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="4"  Style="{StaticResource LabelChangeData}"/>
+            <Label x:Name="weight_now" Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
+            <Label x:Name="weight_actually" Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
+            <Label x:Name="status" Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="4" Style="{StaticResource LabelChangeData}"/>
 
 
 
-            <TextBox x:Name="textboxVag" Grid.Row="2" Grid.Column="6" Grid.ColumnSpan="5"
-                     PreviewTextInput="Vag_PreviewTextInput" PreviewKeyDown="Vag_PreviewKeyDown"
+            <TextBox x:Name="tb_stack_id" Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="5"
+                     PreviewTextInput="all_PreviewTextInput" PreviewKeyDown="all_PreviewKeyDown"
                      Style="{StaticResource textBoxChangeData}"/>
-            <TextBox x:Name="textboxTara" Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="5" 
+            <TextBox x:Name="tb_material" Grid.Row="4" Grid.Column="6" Grid.ColumnSpan="5" 
                      PreviewTextInput="point_PreviewTextInput" PreviewKeyDown="point_PreviewKeyDown"
                      Style="{StaticResource textBoxChangeData}"/>
-            <TextBox x:Name="textboxCarrying" Grid.Row="6" Grid.Column="6" Grid.ColumnSpan="5" 
+            <TextBox x:Name="tb_cinder" Grid.Row="5" Grid.Column="6" Grid.ColumnSpan="5" 
                      PreviewTextInput="point_PreviewTextInput" PreviewKeyDown="point_PreviewKeyDown"
                      Style="{StaticResource textBoxChangeData}"/>
-            <ComboBox x:Name="zona_Value" Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="5"
-                      SelectionChanged="zona_Value_SelectionChanged"
-                      ItemsSource="{Binding Path=zona_Val}" DisplayMemberPath="Name" SelectedValuePath="Name"
-                      SelectedValue="{Binding Path=Zona}" Style="{StaticResource comboBoxChangeData}"/>
-            <ComboBox x:Name="shipper_Value" Grid.Row="8" Grid.Column="6" Grid.ColumnSpan="6"
-                      SelectionChanged="shipper_Value_SelectionChanged"
-                      ItemsSource="{Binding Path=zona_Val}" DisplayMemberPath="Name" SelectedValuePath="Name"
-                      SelectedValue="{Binding Path=Zona}" Style="{StaticResource comboBoxChangeData}"/>
-            <ComboBox x:Name="consigner_Value" Grid.Row="9" Grid.Column="6" Grid.ColumnSpan="6" 
-                      SelectionChanged="consigner_Value_SelectionChanged"
-                      ItemsSource="{Binding Path=zona_Val}" DisplayMemberPath="Name" SelectedValuePath="Name"
-                      SelectedValue="{Binding Path=Zona}" Style="{StaticResource comboBoxChangeData}"/>
-            <ComboBox x:Name="mat_Value" Grid.Row="10" Grid.Column="6" Grid.ColumnSpan="6" 
-                      SelectionChanged="mat_Value_SelectionChanged"
-                      ItemsSource="{Binding Path=zona_Val}" DisplayMemberPath="Name" SelectedValuePath="Name"
-                      SelectedValue="{Binding Path=Zona}" Style="{StaticResource comboBoxChangeData}"/>
-            <ComboBox x:Name="isOk_Value" Grid.Row="11" Grid.Column="6" Grid.ColumnSpan="6" 
-                      SelectionChanged="isOk_Value_SelectionChanged"
-                      ItemsSource="{Binding IsOk_Val}" Style="{StaticResource comboBoxChangeData}"/>
-            <ComboBox x:Name="cause_Value" Grid.Row="12" Grid.Column="6" Grid.ColumnSpan="6"
-                      SelectionChanged="cause_Value_SelectionChanged"
-                      ItemsSource="{Binding Path=Cause}" DisplayMemberPath="Name" SelectedValuePath="Name"
-                      SelectedValue="{Binding Path=cause_t}" Style="{StaticResource comboBoxChangeData}"/>
+            <TextBox x:Name="tb_humidity" Grid.Row="6" Grid.Column="6" Grid.ColumnSpan="5"
+                       Style="{StaticResource textBoxChangeData}"/>
+            <TextBox x:Name="tb_task" Grid.Row="7" Grid.Column="6" Grid.ColumnSpan="6"
+                       Style="{StaticResource textBoxChangeData}"/>
+            <TextBox x:Name="tb_weight_now" Grid.Row="8" Grid.Column="6" Grid.ColumnSpan="6" 
+                       Style="{StaticResource textBoxChangeData}"/>
+            <TextBox x:Name="tb_weight_actually" Grid.Row="9" Grid.Column="6" Grid.ColumnSpan="6"
+                       Style="{StaticResource textBoxChangeData}"/>
+            <TextBox x:Name="tb_status" Grid.Row="10" Grid.Column="6" Grid.ColumnSpan="6" 
+                       Style="{StaticResource textBoxChangeData}"/>
 
 
-
-            <TextBlock x:Name="TextInput" Grid.Column="0" Grid.ColumnSpan="11" Grid.Row="13" 
+            <TextBlock x:Name="TextInput" Grid.Column="0" Grid.ColumnSpan="11" Grid.Row="11" 
                        FontSize="14" FontFamily="Calibry" Foreground ="#B22222"  Height="20"
                        TextAlignment="Center"/>
-            <WrapPanel Grid.Row="14" Grid.Column="3" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center"  >
+            <WrapPanel Grid.Row="12" Grid.Column="3" Grid.ColumnSpan="4" HorizontalAlignment="Center" VerticalAlignment="Center"  >
                 <Button Content="Принять" Style="{StaticResource GreenButton}"  Width="95" ToolTip="Выход"
                              Click="ok_Click"/>
                 <Button x:Name="ok" Content="Отменить" IsDefault="True" Style="{StaticResource RedButton}" 
